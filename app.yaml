@@ -1,0 +1,43 @@
+runtime: nodejs20  # Tentukan versi Node.js yang ingin lo gunakan
+env: flex  # Gunakan "standard" atau "flex" tergantung environment yang lo butuh
+
+entrypoint: node blast.js
+
+instance_class: F1  # Tentukan kelas instance (F1, F2, F4, F4_1G, dll.)
+
+automatic_scaling:  # Atau gunakan manual_scaling atau basic_scaling tergantung kebutuhan
+  min_instances: 1  # Jumlah minimum instances yang dijalankan
+  max_instances: 5  # Jumlah maksimum instances yang bisa di-scale
+
+# Environment variables
+env_variables:
+  NODE_ENV: 'production'
+  MY_CUSTOM_VAR: 'value'  # Tambahkan variabel environment custom lo di sini
+
+# Handlers: Tentukan bagaimana URL di-handle oleh aplikasi lo
+handlers:
+  - url: /backend
+    static_dir: backend
+
+  - url: /static
+    static_dir: frontend
+
+  - url: /.*
+    script: auto
+
+# Health Checks (opsional)
+liveness_check:
+  path: "/liveness_check"
+readiness_check:
+  path: "/readiness_check"
+
+# Resource Settings (Opsional, untuk fine-tuning)
+resources:
+  cpu: 1
+  memory_gb: 0.5
+  disk_size_gb: 10
+
+# Networking settings (opsional)
+vpc_access_connector:
+  name: projects/civil-epoch-404906/locations/us-central1/connectors/wa-blast
+
